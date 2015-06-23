@@ -1,0 +1,114 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../moe-style/moe-style.html">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="../bower_components/jquery-collagePlus/jquery.collagePlus.min.js"></script>
+<script src="../bower_components/jquery-collagePlus/extras/jquery.removeWhitespace.min.js"></script>
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <moe-form></moe-form>
+
+@demo
+-->
+<dom-module id="moe-gallery">
+    <style>
+        html body{
+            margin:0;
+            padding:0;
+            background-color:rgb(230, 230, 230);
+            font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        a{
+            color:#09F;
+            text-decoration:none;
+        }
+
+        #collage {
+            width: 100%;
+        }
+
+        #collage img{
+            margin:0;
+            padding:0;
+            display:inline-block;
+            vertical-align:bottom;
+            opacity:1;
+
+            /*This is where you set the border you want for the image*/
+            border:6px solid #FFF;
+        }
+
+
+        /* In this example, this is the main item being resized */
+        .Image_Wrapper{
+            -moz-box-shadow:0px 2px 4px rgba(0, 0, 0, 0.1);
+            -webkit-box-shadow:0px 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow:0px 2px 4px rgba(0, 0, 0, 0.1);
+            -moz-border-radius: 3px;
+            -webkit-border-radius: 3px;
+            border-radius: 3px;
+        }
+    </style>
+    <template>
+        <div id="collage">
+            <template is="dom-repeat" items="{{images}}">
+                <div class="Image_Wrapper">
+                    <a href$="{{item.thumb.url}}" target="_blank">
+                        <img width$="{{item.thumb.w}}" height$="{{item.thumb.h}}" src$="{{item.thumb.url}}" />
+                    </a>
+                </div>
+            </template>
+        </div>
+    </template>
+</dom-module>
+<script>
+
+Polymer({
+
+    is: 'moe-gallery',
+
+    properties: {
+        images: {
+            type: Array,
+            value: []
+        }
+    },
+
+    observers: [
+        
+    ],
+
+    ready: function() {
+        var that = this;
+
+        window.addEventListener("resize", function() {
+            that.onResize();
+        });
+    },
+
+    attached: function() {
+    },
+
+    detached: function() {
+    },
+
+    addImages: function(images) {
+        for(var i = 0;i < images.length;i++) {
+            this.push('images', images[i]);
+        }
+
+        this.onResize();
+    },
+
+    onResize: function() {
+        if (this.resizeTimer) clearTimeout(this.resizeTimer);
+
+        this.resizeTimer = setTimeout(function() {
+            $("#collage").removeWhitespace().collagePlus();
+        }, 200);
+    }
+});
+</script>
